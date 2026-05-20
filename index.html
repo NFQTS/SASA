@@ -124,11 +124,6 @@
 			border: 1px solid var(--border);
 			background: transparent;
 			color: var(--muted);
-			text-align: center;
-		}
-
-		.small-btn:active {
-			transform: scale(0.98);
 		}
 
 		.modal {
@@ -159,6 +154,14 @@
 			color: var(--text);
 			font-size: 13px;
 			box-sizing: border-box;
+			margin-bottom: 8px;
+		}
+
+		.modal small {
+			color: var(--muted);
+			font-size: 11px;
+			display: block;
+			margin-top: 6px;
 		}
 	</style>
 </head>
@@ -181,16 +184,23 @@
 
 </div>
 
-<!-- EMAIL MODAL -->
+<!-- MODAL -->
 <div class="modal" id="modal">
 	<div class="modal-box">
-		<div style="margin-bottom:10px;font-size:13px;">Enter email to submit</div>
-		<input id="email" placeholder="you@email.com" />
+
+		<input id="username" placeholder="username (public)" />
+		<input id="email" placeholder="email (private)" />
+
+		<small>
+			Each email can submit 1 idea. Username is public.
+		</small>
+
 		<button onclick="confirmSubmit()">Continue</button>
 	</div>
 </div>
 
 <script>
+
 /* ---------------- STORAGE ---------------- */
 
 function getStore() {
@@ -201,7 +211,7 @@ function setStore(v) {
 	localStorage.setItem("sasa", JSON.stringify(v));
 }
 
-/* ---------------- EMAIL LIMIT ---------------- */
+/* ---------------- VALIDATION ---------------- */
 
 function normalizeEmail(e) {
 	return (e || "").toLowerCase().trim();
@@ -211,7 +221,11 @@ function emailUsed(email, data) {
 	return data.some(x => x.email === email);
 }
 
-/* ---------------- SUBMIT FLOW ---------------- */
+function normalizeUsername(u) {
+	return (u || "").toLowerCase().trim();
+}
+
+/* ---------------- FLOW ---------------- */
 
 let pendingText = "";
 
@@ -224,9 +238,12 @@ function attemptSubmit() {
 }
 
 function confirmSubmit() {
+	const usernameRaw = document.getElementById("username").value.trim();
 	const email = normalizeEmail(document.getElementById("email").value);
-	if (!email || !email.includes("@")) return;
 
+	if (!usernameRaw || !email.includes("@")) return;
+
+	const username = normalizeUsername(usernameRaw);
 	const data = getStore();
 
 	if (emailUsed(email, data)) {
@@ -236,6 +253,7 @@ function confirmSubmit() {
 
 	data.push({
 		text: pendingText,
+		username,
 		email,
 		upvotes: 0,
 		time: Date.now()
@@ -245,6 +263,7 @@ function confirmSubmit() {
 
 	pendingText = "";
 	document.getElementById("input").value = "";
+	document.getElementById("username").value = "";
 	document.getElementById("email").value = "";
 	document.getElementById("modal").style.display = "none";
 
@@ -264,24 +283,6 @@ function upvote(index) {
 
 	localStorage.setItem(key, "1");
 	render();
-}
-
-/* ---------------- X SHARE (CTR TRACKING) ---------------- */
-
-function xShare(text) {
-	const base = "https://twitter.com/intent/tweet";
-
-	const msg =
-		`${text}\n\nBuild this on SASA\n@unprincipledinc`;
-
-	const url = base +
-		"?text=" + encodeURIComponent(msg);
-
-	// optional CTR hook (local tracking)
-	const key = "share_" + text;
-	localStorage.setItem(key, (parseInt(localStorage.getItem(key) || "0") + 1).toString());
-
-	window.open(url, "_blank");
 }
 
 /* ---------------- RENDER ---------------- */
@@ -310,12 +311,11 @@ function render() {
 
 			<div class="meta">
 				<span>▲ ${item.upvotes || 0}</span>
-				<span>${item.email.split("@")[0]}</span>
+				<span>by ${item.username || "anon"}</span>
 			</div>
 
 			<div class="actions">
 				<button class="small-btn" onclick="upvote(${realIndex})">Upvote</button>
-				<button class="small-btn" onclick="xShare(\`${item.text.replace(/`/g,'')}\`)">Share on X</button>
 			</div>
 		`;
 

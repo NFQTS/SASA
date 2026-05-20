@@ -4,118 +4,184 @@
 	<meta charset="UTF-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 	<title>SASA</title>
+
 	<style>
-		body {
-			font-family: Arial, sans-serif;
-			margin: 0;
-			padding: 20px;
-			background: #0f0f0f;
-			color: #f0f0f0;
+		:root {
+			--bg: #0b0b0f;
+			--card: #15151d;
+			--muted: #8a8a9a;
+			--text: #f5f5f7;
+			--accent: #6c7cff;
 		}
 
-		h1 {
-			font-size: 20px;
-			margin-bottom: 10px;
+		body {
+			margin: 0;
+			font-family: system-ui, -apple-system, sans-serif;
+			background: var(--bg);
+			color: var(--text);
 		}
 
 		.container {
-			max-width: 600px;
+			max-width: 520px;
 			margin: 0 auto;
+			padding: 18px;
+		}
+
+		header {
+			margin-bottom: 14px;
+		}
+
+		h1 {
+			font-size: 18px;
+			margin: 0;
+			letter-spacing: 0.4px;
+		}
+
+		.sub {
+			font-size: 12px;
+			color: var(--muted);
+			margin-top: 4px;
+		}
+
+		.glow {
+			display: inline-block;
+			width: 6px;
+			height: 6px;
+			border-radius: 50%;
+			background: var(--accent);
+			margin-left: 6px;
+			box-shadow: 0 0 10px var(--accent);
+			animation: pulse 1.8s infinite;
+		}
+
+		@keyframes pulse {
+			0%, 100% { opacity: 0.4; transform: scale(1); }
+			50% { opacity: 1; transform: scale(1.4); }
 		}
 
 		textarea {
 			width: 100%;
-			height: 90px;
+			height: 70px;
+			border: 1px solid #222;
+			border-radius: 10px;
 			padding: 10px;
-			border-radius: 8px;
-			border: none;
+			background: #111;
+			color: var(--text);
+			font-size: 13px;
 			outline: none;
-			font-size: 14px;
 		}
 
 		button {
-			margin-top: 10px;
 			width: 100%;
-			padding: 12px;
+			margin-top: 8px;
+			padding: 10px;
 			border: none;
-			border-radius: 8px;
-			background: #4f7cff;
+			border-radius: 10px;
+			background: var(--accent);
 			color: white;
-			font-size: 14px;
+			font-size: 13px;
 			cursor: pointer;
 		}
 
+		button:active {
+			transform: scale(0.98);
+		}
+
+		.section-title {
+			font-size: 11px;
+			color: var(--muted);
+			margin: 16px 0 6px;
+			text-transform: uppercase;
+			letter-spacing: 1px;
+		}
+
 		.card {
-			background: #1a1a1a;
+			background: var(--card);
 			padding: 10px;
-			border-radius: 8px;
-			margin-top: 10px;
+			border-radius: 10px;
+			margin-bottom: 8px;
+			animation: fadeIn 0.25s ease-out;
+			border: 1px solid #1f1f2a;
+		}
+
+		@keyframes fadeIn {
+			from { opacity: 0; transform: translateY(4px); }
+			to { opacity: 1; transform: translateY(0); }
+		}
+
+		.idea-text {
 			font-size: 13px;
 		}
 
-		.label {
-			opacity: 0.6;
-			font-size: 12px;
-			margin-top: 20px;
+		.meta {
+			font-size: 11px;
+			color: var(--muted);
+			margin-top: 6px;
+			display: flex;
+			justify-content: space-between;
 		}
 
-		.idea {
-			padding: 8px;
-			border-bottom: 1px solid #2a2a2a;
+		.actions {
+			margin-top: 6px;
+			display: flex;
+			gap: 8px;
 		}
 
-		.small {
-			opacity: 0.7;
+		.small-btn {
+			font-size: 11px;
+			padding: 6px 8px;
+			border-radius: 8px;
+			border: 1px solid #2a2a2a;
+			background: transparent;
+			color: var(--muted);
+		}
+
+		.small-btn:hover {
+			border-color: var(--accent);
+			color: var(--text);
+		}
+
+		.empty {
 			font-size: 12px;
+			color: var(--muted);
+			padding: 10px;
+			border: 1px dashed #2a2a2a;
+			border-radius: 10px;
 		}
 	</style>
 </head>
+
 <body>
 	<div class="container">
-		<h1>Request SASA</h1>
-		<div class="small">Problems Are Opportunities</div>
 
-		<textarea id="input" placeholder="What do you need help with?"></textarea>
-		<button onclick="submitRequest()">Submit Request</button>
+		<header>
+			<h1>SASA <span class="glow"></span></h1>
+			<div class="sub">Problems → Buildable AI tools</div>
+		</header>
 
-		<div class="label">Known ideas (examples)</div>
-		<div id="ideas"></div>
+		<textarea id="input" placeholder="Describe a problem or tool you want built..."></textarea>
+		<button onclick="submitRequest()">Submit</button>
 
-		<div class="label">Live requests</div>
-		<div id="requests"></div>
+		<div class="section-title">Live feed</div>
+		<div id="feed"></div>
+
 	</div>
 
 	<script>
-		const defaultIdeas = [
-			"AI homework helper via WhatsApp",
-			"Small business CRM bot",
-			"Side-hustle generator assistant",
-			"Study quiz generator",
-			"Expense tracker via chat"
+		const seed = [
+			"AI WhatsApp homework helper",
+			"Small business CRM bot for phones",
+			"Auto CV builder from chat",
+			"Expense tracker via SMS",
+			"Job application autofiller"
 		];
 
-		function load() {
-			const ideasDiv = document.getElementById("ideas");
-			const reqDiv = document.getElementById("requests");
+		function getStore() {
+			return JSON.parse(localStorage.getItem("sasa") || "[]");
+		}
 
-			ideasDiv.innerHTML = "";
-			reqDiv.innerHTML = "";
-
-			defaultIdeas.forEach(i => {
-				const d = document.createElement("div");
-				d.className = "idea";
-				d.textContent = i;
-				ideasDiv.appendChild(d);
-			});
-
-			const stored = JSON.parse(localStorage.getItem("requests") || "[]");
-
-			stored.slice().reverse().forEach(r => {
-				const d = document.createElement("div");
-				d.className = "idea";
-				d.innerHTML = `<div>${r.text}</div><div class="small">${r.time}</div>`;
-				reqDiv.appendChild(d);
-			});
+		function setStore(v) {
+			localStorage.setItem("sasa", JSON.stringify(v));
 		}
 
 		function submitRequest() {
@@ -123,20 +189,70 @@
 			const text = input.value.trim();
 			if (!text) return;
 
-			const stored = JSON.parse(localStorage.getItem("requests") || "[]");
-
-			stored.push({
+			const data = getStore();
+			data.push({
 				text,
-				time: new Date().toLocaleString()
+				upvotes: 0,
+				time: Date.now()
 			});
 
-			localStorage.setItem("requests", JSON.stringify(stored));
-
+			setStore(data);
 			input.value = "";
-			load();
+			render();
 		}
 
-		load();
+		function upvote(i) {
+			const data = getStore();
+			data[i].upvotes++;
+			setStore(data);
+			render();
+		}
+
+		function buildLink(text) {
+			return `https://github.com/new?title=${encodeURIComponent("Build: " + text)}`;
+		}
+
+		function render() {
+			const feed = document.getElementById("feed");
+			const data = getStore();
+
+			feed.innerHTML = "";
+
+			const all = [...seed.map(t => ({
+				text: t,
+				upvotes: 0,
+				time: 0,
+				seed: true
+			})), ...data];
+
+			if (all.length === 0) {
+				feed.innerHTML = `<div class="empty">No requests yet.</div>`;
+				return;
+			}
+
+			all.reverse().forEach((item, i) => {
+				const div = document.createElement("div");
+				div.className = "card";
+
+				div.innerHTML = `
+					<div class="idea-text">${item.text}</div>
+
+					<div class="meta">
+						<span>▲ ${item.upvotes || 0}</span>
+						<span>${item.seed ? "seed" : "user"}</span>
+					</div>
+
+					<div class="actions">
+						<button class="small-btn" onclick="upvote(${i})">Upvote</button>
+						<a class="small-btn" href="${buildLink(item.text)}" target="_blank">Build</a>
+					</div>
+				`;
+
+				feed.appendChild(div);
+			});
+		}
+
+		render();
 	</script>
 </body>
 </html>

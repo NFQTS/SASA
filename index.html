@@ -7,218 +7,287 @@
 
 <style>
 :root{
-	--bg:#07070c;
-	--card:#141420;
-	--text:#f5f5f7;
-	--muted:#8a8aa3;
-	--border:#23233a;
+	--bg:#06070b;
+	--card:rgba(18,20,32,0.82);
+	--border:#23253a;
+	--text:#f4f4f6;
+	--muted:#8b8ea7;
 	--accent:#6c7cff;
+}
+
+*{
+	box-sizing:border-box;
 }
 
 body{
 	margin:0;
-	font-family:system-ui;
+	font-family:system-ui,-apple-system,BlinkMacSystemFont,sans-serif;
 	background:var(--bg);
 	color:var(--text);
+	min-height:100vh;
 	display:flex;
 	justify-content:center;
 	align-items:center;
-	min-height:100vh;
+	overflow:hidden;
 }
 
+/* ---------- STARS ---------- */
+
+#stars{
+	position:fixed;
+	inset:0;
+	z-index:0;
+}
+
+/* ---------- LAYOUT ---------- */
+
 .container{
+	position:relative;
+	z-index:1;
 	width:100%;
 	max-width:420px;
-	padding:20px;
+	padding:22px;
 	display:flex;
 	flex-direction:column;
 	align-items:center;
-	gap:12px;
 	text-align:center;
 }
 
-h1{
-	margin:0;
-	font-size:20px;
+.logo{
+	font-size:24px;
+	font-weight:700;
+	letter-spacing:1px;
+	margin-bottom:6px;
 }
 
 .sub{
 	font-size:11px;
 	color:var(--muted);
-	margin-bottom:10px;
+	margin-bottom:18px;
+	letter-spacing:.5px;
 }
 
-/* CARD */
+/* ---------- CARDS ---------- */
 
 .card{
 	width:100%;
-	background:rgba(20,20,32,0.85);
+	background:var(--card);
 	border:1px solid var(--border);
-	border-radius:14px;
-	padding:14px;
+	border-radius:18px;
+	padding:18px 14px;
+	margin-bottom:12px;
 	cursor:pointer;
-	transition:transform .1s ease, border .15s ease;
-	text-align:left;
-}
+	backdrop-filter:blur(10px);
 
-.card:active{
-	transform:scale(0.98);
+	transition:
+		transform .15s ease,
+		border-color .15s ease,
+		background .15s ease;
 }
 
 .card:hover{
 	border-color:var(--accent);
+	transform:translateY(-2px);
 }
 
-.top{
+.card:active{
+	transform:scale(.985);
+}
+
+.emoji{
+	font-size:28px;
+	margin-bottom:8px;
+}
+
+.sw{
 	font-size:16px;
-	font-weight:700;
+	font-weight:650;
+	margin-bottom:4px;
 }
 
-.mid{
-	font-size:13px;
+.en{
+	font-size:12px;
 	color:var(--muted);
-	margin-top:2px;
 }
 
-.bottom{
-	font-size:11px;
-	color:#6f6f86;
-	margin-top:4px;
-}
-
-/* MODAL */
+/* ---------- MODAL ---------- */
 
 .modal{
 	position:fixed;
 	inset:0;
-	background:rgba(0,0,0,0.7);
+	background:rgba(0,0,0,.72);
 	display:none;
 	align-items:center;
 	justify-content:center;
+	z-index:10;
+	padding:18px;
 }
 
 .box{
-	width:90%;
+	width:100%;
 	max-width:320px;
-	background:var(--card);
+	background:#121420;
 	border:1px solid var(--border);
-	border-radius:14px;
-	padding:14px;
+	border-radius:18px;
+	padding:16px;
 	display:flex;
 	flex-direction:column;
-	gap:8px;
+	align-items:center;
+	text-align:center;
+}
+
+.modal-title{
+	font-size:18px;
+	margin-bottom:4px;
+}
+
+.modal-sub{
+	font-size:11px;
+	color:var(--muted);
+	margin-bottom:14px;
 }
 
 input{
-	padding:10px;
-	border-radius:10px;
+	width:100%;
+	padding:12px;
+	margin-bottom:10px;
+	border-radius:12px;
 	border:1px solid var(--border);
-	background:#0f0f18;
+	background:#0b0d16;
 	color:var(--text);
 	font-size:13px;
+	text-align:center;
+	outline:none;
+}
+
+input:focus{
+	border-color:var(--accent);
 }
 
 button{
-	padding:10px;
+	width:100%;
+	padding:12px;
 	border:none;
-	border-radius:10px;
+	border-radius:12px;
 	background:var(--accent);
 	color:white;
 	font-size:13px;
 	cursor:pointer;
 }
 
-.small{
-	font-size:11px;
-	color:var(--muted);
+button:hover{
+	opacity:.95;
 }
 </style>
 </head>
 
 <body>
 
+<canvas id="stars"></canvas>
+
 <div class="container">
 
-	<h1>SASA</h1>
-	<div class="sub">chagua tatizo</div>
+	<div class="logo">SASA</div>
+	<div class="sub">choose a problem</div>
 
 	<div class="card" onclick="submitFixed('💸','pesa')">
-		<div class="top">💸 Pesa</div>
-		<div class="mid">Money / Income</div>
-		<div class="bottom">financial pressure or opportunity</div>
+		<div class="emoji">💸</div>
+		<div class="sw">Pesa</div>
+		<div class="en">money</div>
 	</div>
 
 	<div class="card" onclick="submitFixed('⏳','muda')">
-		<div class="top">⏳ Muda</div>
-		<div class="mid">Time / Efficiency</div>
-		<div class="bottom">lack of time or productivity friction</div>
+		<div class="emoji">⏳</div>
+		<div class="sw">Muda</div>
+		<div class="en">time</div>
 	</div>
 
 	<div class="card" onclick="submitFixed('📚','elimu')">
-		<div class="top">📚 Elimu</div>
-		<div class="mid">Learning / Skills</div>
-		<div class="bottom">education, skills, knowledge gaps</div>
+		<div class="emoji">📚</div>
+		<div class="sw">Elimu</div>
+		<div class="en">learning</div>
 	</div>
 
 	<div class="card" onclick="openIdea()">
-		<div class="top">➕ Wazo</div>
-		<div class="mid">Add new category</div>
-		<div class="bottom">define a new type of problem</div>
+		<div class="emoji">➕</div>
+		<div class="sw">Wazo</div>
+		<div class="en">new idea</div>
 	</div>
 
 	<div class="card" onclick="openMap()">
-		<div class="top">🗺 Ramani</div>
-		<div class="mid">Heatmap (coming soon)</div>
-		<div class="bottom">see regional demand signals</div>
+		<div class="emoji">🗺</div>
+		<div class="sw">Ramani</div>
+		<div class="en">coming soon</div>
 	</div>
 
 </div>
 
 <!-- IDEA MODAL -->
+
 <div class="modal" id="ideaModal">
 	<div class="box">
-		<input id="emoji" placeholder="emoji (e.g. 💡)"/>
-		<input id="swahili" placeholder="swahili word (e.g. shida)"/>
-		<input id="english" placeholder="english context (e.g. problem type)"/>
+
+		<div class="modal-title">➕ Wazo</div>
+		<div class="modal-sub">emoji + swahili + english</div>
+
+		<input id="emojiInput" placeholder="emoji"/>
+		<input id="swInput" placeholder="swahili"/>
+		<input id="enInput" placeholder="english"/>
+
 		<button onclick="submitIdea()">tuma</button>
+
 	</div>
 </div>
 
 <!-- MAP MODAL -->
+
 <div class="modal" id="mapModal">
 	<div class="box">
-		<div class="top">🗺 Ramani</div>
-		<div class="small">heatmap system in development</div>
+
+		<div class="modal-title">🗺 Ramani</div>
+		<div class="modal-sub">
+			regional heatmaps coming soon
+		</div>
+
 		<button onclick="closeMap()">close</button>
+
 	</div>
 </div>
 
 <script>
 
+/* ---------- REGION ---------- */
+
 let regionCache = null;
 
-/* ---------------- IP GEO ---------------- */
-
 async function getRegion(){
+
 	if(regionCache) return regionCache;
 
 	try{
+
 		const res = await fetch("https://ipapi.co/json/");
 		const data = await res.json();
 
 		regionCache = {
-			country: data.country_name,
-			region: data.region,
-			city: data.city
+			country:data.country_name,
+			region:data.region,
+			city:data.city
 		};
 
 		return regionCache;
+
 	}catch(e){
-		return {country:"unknown",region:"unknown",city:"unknown"};
+
+		return {
+			country:"unknown",
+			region:"unknown",
+			city:"unknown"
+		};
 	}
 }
 
-/* ---------------- SUBMIT ---------------- */
+/* ---------- SUBMIT ---------- */
 
 async function submitFixed(emoji, category){
 
@@ -227,41 +296,50 @@ async function submitFixed(emoji, category){
 	const payload = {
 		emoji,
 		category,
-		location: loc,
-		timestamp: Date.now()
+		location:loc,
+		timestamp:Date.now()
 	};
 
-	console.log("EVENT:", payload);
+	console.log(payload);
 
-	alert(`${emoji} ${category} saved`);
+	alert(`${emoji} saved`);
 }
 
-/* ---------------- IDEA ---------------- */
+/* ---------- IDEA ---------- */
 
 function openIdea(){
 	document.getElementById("ideaModal").style.display="flex";
 }
 
 function submitIdea(){
-	const emoji = document.getElementById("emoji").value.trim();
-	const swahili = document.getElementById("swahili").value.trim();
-	const english = document.getElementById("english").value.trim();
 
-	if(!emoji || !swahili) return;
+	const emoji =
+		document.getElementById("emojiInput").value.trim();
 
-	console.log("CUSTOM CATEGORY:", {
+	const sw =
+		document.getElementById("swInput").value.trim();
+
+	const en =
+		document.getElementById("enInput").value.trim();
+
+	if(!emoji || !sw || !en) return;
+
+	console.log({
 		emoji,
-		swahili,
-		english
+		swahili:sw,
+		english:en
 	});
 
-	document.getElementById("emoji").value="";
-	document.getElementById("swahili").value="";
-	document.getElementById("english").value="";
+	document.getElementById("emojiInput").value="";
+	document.getElementById("swInput").value="";
+	document.getElementById("enInput").value="";
+
 	document.getElementById("ideaModal").style.display="none";
+
+	alert("wazo saved");
 }
 
-/* ---------------- MAP ---------------- */
+/* ---------- MAP ---------- */
 
 function openMap(){
 	document.getElementById("mapModal").style.display="flex";
@@ -271,12 +349,61 @@ function closeMap(){
 	document.getElementById("mapModal").style.display="none";
 }
 
-/* close modal */
+/* ---------- CLOSE MODALS ---------- */
+
 window.onclick = (e)=>{
+
 	if(e.target.classList.contains("modal")){
 		e.target.style.display="none";
 	}
 };
+
+/* ---------- STARFIELD ---------- */
+
+const canvas = document.getElementById("stars");
+const ctx = canvas.getContext("2d");
+
+let stars = [];
+
+function resize(){
+
+	canvas.width = innerWidth;
+	canvas.height = innerHeight;
+
+	stars = Array.from({length:70},()=>({
+		x:Math.random()*canvas.width,
+		y:Math.random()*canvas.height,
+		r:Math.random()*1.4,
+		p:Math.random()*Math.PI*2
+	}));
+}
+
+function animate(){
+
+	ctx.clearRect(0,0,canvas.width,canvas.height);
+
+	for(const s of stars){
+
+		ctx.beginPath();
+
+		ctx.globalAlpha =
+			0.15 + Math.sin(s.p)*0.25;
+
+		ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
+
+		ctx.fillStyle = "white";
+		ctx.fill();
+
+		s.p += 0.01;
+	}
+
+	requestAnimationFrame(animate);
+}
+
+resize();
+animate();
+
+window.addEventListener("resize",resize);
 
 </script>
 

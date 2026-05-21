@@ -148,12 +148,12 @@ button{
 	</div>
 
 	<div class="card" onclick="openIdea()">
-		<div class="row">➕ Add Idea</div>
-		<div class="sw">Add a Problem</div>
+		<div class="row">➕ Wazo</div>
+		<div class="sw">ongeza tatizo</div>
 	</div>
 
 	<div class="card" onclick="openMap()">
-		<div class="row">🗺 Map</div>
+		<div class="row">🗺 Ramani</div>
 		<div class="sw">coming soon</div>
 	</div>
 
@@ -162,18 +162,18 @@ button{
 <!-- IDEA MODAL -->
 <div class="modal" id="ideaModal">
 	<div class="box">
-		<input id="emoji" placeholder="emoji"/>
-		<input id="word" placeholder="word (EN / SW)"/>
-		<button onclick="submitIdea()">Submit</button>
+		<input id="emoji" placeholder="emoji (mf. 💡)"/>
+		<input id="word" placeholder="wazo (neno moja)"/>
+		<button onclick="submitIdea()">tuma</button>
 	</div>
 </div>
 
 <!-- MAP MODAL -->
 <div class="modal" id="mapModal">
 	<div class="box">
-		<div class="row">🗺 Coming Soon</div>
-		<div class="small">We’re building demand heatmaps by region.</div>
-		<button onclick="closeMap()">Close</button>
+		<div class="row">🗺 Ramani</div>
+		<div class="small">ramani ya mahitaji inakuja hivi karibuni</div>
+		<button onclick="closeMap()">funga</button>
 	</div>
 </div>
 
@@ -217,10 +217,7 @@ async function submitFixed(emoji, category){
 
 	console.log("EVENT:", payload);
 
-	// TODO: replace with backend later:
-	// fetch("/api/submit", {method:"POST", body:JSON.stringify(payload)})
-
-	alert(`Saved: ${emoji} ${category}\n${loc.region || loc.country}`);
+	alert(`Saved: ${emoji} ${category}`);
 }
 
 /* ---------------- IDEA ---------------- */
@@ -235,7 +232,10 @@ function submitIdea(){
 
 	if(!emoji || !word) return;
 
-	console.log("CUSTOM IDEA:", {emoji, word});
+	console.log("CUSTOM IDEA:", {
+		emoji,
+		word
+	});
 
 	document.getElementById("emoji").value="";
 	document.getElementById("word").value="";

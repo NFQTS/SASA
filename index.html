@@ -28,23 +28,23 @@ body{
 .container{
 	width:100%;
 	max-width:420px;
+	padding:20px;
 	display:flex;
 	flex-direction:column;
 	align-items:center;
-	gap:14px;
-	padding:20px;
+	gap:12px;
 	text-align:center;
 }
 
 h1{
 	margin:0;
 	font-size:20px;
-	letter-spacing:1px;
 }
 
 .sub{
 	font-size:11px;
 	color:var(--muted);
+	margin-bottom:10px;
 }
 
 .card{
@@ -54,33 +54,67 @@ h1{
 	border-radius:14px;
 	padding:16px;
 	cursor:pointer;
-	transition:transform .1s ease;
+	transition:transform .1s ease, border .15s ease;
 }
 
 .card:active{
 	transform:scale(0.98);
 }
 
-.row{
-	font-size:16px;
-	margin-bottom:6px;
+.card:hover{
+	border-color:#6c7cff;
 }
 
-.label{
-	font-size:13px;
-	color:var(--text);
+.row{
+	font-size:16px;
+	font-weight:600;
 }
 
 .sw{
-	font-size:11px;
+	font-size:12px;
 	color:var(--muted);
-	margin-top:2px;
+	margin-top:4px;
 }
 
-.footer{
-	font-size:10px;
-	color:var(--muted);
-	margin-top:10px;
+/* modal */
+.modal{
+	position:fixed;
+	inset:0;
+	background:rgba(0,0,0,0.7);
+	display:none;
+	align-items:center;
+	justify-content:center;
+}
+
+.box{
+	width:90%;
+	max-width:320px;
+	background:var(--card);
+	border:1px solid var(--border);
+	border-radius:14px;
+	padding:14px;
+	display:flex;
+	flex-direction:column;
+	gap:8px;
+}
+
+input{
+	padding:10px;
+	border-radius:10px;
+	border:1px solid var(--border);
+	background:#0f0f18;
+	color:var(--text);
+	font-size:13px;
+}
+
+button{
+	padding:10px;
+	border:none;
+	border-radius:10px;
+	background:#6c7cff;
+	color:white;
+	font-size:13px;
+	cursor:pointer;
 }
 </style>
 </head>
@@ -92,38 +126,77 @@ h1{
 	<h1>SASA</h1>
 	<div class="sub">chagua tatizo</div>
 
-	<div class="card" onclick="go('money')">
-		<div class="row">💸 Money</div>
-		<div class="label">Pesa</div>
-		<div class="sw">fedha / kipato</div>
+	<div class="card" onclick="submitFixed('💸','Pesa','Money')">
+		<div class="row">💸 Pesa</div>
+		<div class="sw">Money / Income</div>
 	</div>
 
-	<div class="card" onclick="go('time')">
-		<div class="row">⏳ Time</div>
-		<div class="label">Muda</div>
-		<div class="sw">ucheleweshaji / kazi</div>
+	<div class="card" onclick="submitFixed('⏳','Muda','Time')">
+		<div class="row">⏳ Muda</div>
+		<div class="sw">Daily struggle / inefficiency</div>
 	</div>
 
-	<div class="card" onclick="go('opportunity')">
-		<div class="row">🚀 Opportunity</div>
-		<div class="label">Fursa</div>
-		<div class="sw">ujifunzaji / kazi / ukuaji</div>
+	<div class="card" onclick="submitFixed('📚','Elimu','Learning')">
+		<div class="row">📚 Elimu</div>
+		<div class="sw">Skills / learning / growth</div>
 	</div>
 
-	<div class="footer">tap to continue</div>
+	<div class="card" onclick="openCustom()">
+		<div class="row">➕ Add</div>
+		<div class="sw">Suggest new problem</div>
+	</div>
 
 </div>
 
-<script>
-function go(type){
-	const routes = {
-		money: "https://forms.gle/REPLACE",
-		time: "https://forms.gle/REPLACE",
-		opportunity: "https://forms.gle/REPLACE"
-	};
+<!-- MODAL -->
+<div class="modal" id="modal">
+	<div class="box">
 
-	window.location.href = routes[type];
+		<input id="emoji" placeholder="emoji (💡)" maxlength="2"/>
+		<input id="word" placeholder="word (English or Swahili)"/>
+
+		<button onclick="submitCustom()">Submit</button>
+
+	</div>
+</div>
+
+<script>
+
+let selected = null;
+
+function submitFixed(emoji, sw, en){
+	alert(`Selected: ${emoji} ${en} / ${sw}`);
+
+	// placeholder for backend / form redirect
+	// window.location.href = "YOUR_FORM_URL";
 }
+
+function openCustom(){
+	document.getElementById("modal").style.display="flex";
+}
+
+function submitCustom(){
+	const emoji = document.getElementById("emoji").value.trim();
+	const word = document.getElementById("word").value.trim();
+
+	if(!emoji || !word) return;
+
+	alert(`New category submitted: ${emoji} ${word}`);
+
+	document.getElementById("emoji").value="";
+	document.getElementById("word").value="";
+	document.getElementById("modal").style.display="none";
+
+	// hook for backend later:
+	// send({emoji, word})
+}
+
+window.onclick = (e)=>{
+	if(e.target.id==="modal"){
+		document.getElementById("modal").style.display="none";
+	}
+};
+
 </script>
 
 </body>

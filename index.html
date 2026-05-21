@@ -7,287 +7,202 @@
 
 <style>
 :root{
-	--bg:#06070b;
-	--card:rgba(18,20,32,0.82);
-	--border:#23253a;
-	--text:#f4f4f6;
-	--muted:#8b8ea7;
+	--bg:#07070c;
+	--card:#141420;
+	--text:#f5f5f7;
+	--muted:#8a8aa3;
+	--border:#23233a;
 	--accent:#6c7cff;
-}
-
-*{
-	box-sizing:border-box;
 }
 
 body{
 	margin:0;
-	font-family:system-ui,-apple-system,BlinkMacSystemFont,sans-serif;
+	font-family:system-ui;
 	background:var(--bg);
 	color:var(--text);
-	min-height:100vh;
 	display:flex;
 	justify-content:center;
 	align-items:center;
-	overflow:hidden;
+	min-height:100vh;
 }
-
-/* ---------- STARS ---------- */
-
-#stars{
-	position:fixed;
-	inset:0;
-	z-index:0;
-}
-
-/* ---------- LAYOUT ---------- */
 
 .container{
-	position:relative;
-	z-index:1;
 	width:100%;
 	max-width:420px;
-	padding:22px;
+	padding:20px;
 	display:flex;
 	flex-direction:column;
 	align-items:center;
+	gap:12px;
 	text-align:center;
 }
 
-.logo{
-	font-size:24px;
-	font-weight:700;
-	letter-spacing:1px;
-	margin-bottom:6px;
+h1{
+	margin:0;
+	font-size:20px;
 }
 
 .sub{
 	font-size:11px;
 	color:var(--muted);
-	margin-bottom:18px;
-	letter-spacing:.5px;
+	margin-bottom:10px;
 }
-
-/* ---------- CARDS ---------- */
 
 .card{
 	width:100%;
-	background:var(--card);
+	background:rgba(20,20,32,0.85);
 	border:1px solid var(--border);
-	border-radius:18px;
-	padding:18px 14px;
-	margin-bottom:12px;
+	border-radius:14px;
+	padding:16px;
 	cursor:pointer;
-	backdrop-filter:blur(10px);
+	transition:transform .1s ease, border .15s ease;
+}
 
-	transition:
-		transform .15s ease,
-		border-color .15s ease,
-		background .15s ease;
+.card:active{
+	transform:scale(0.98);
 }
 
 .card:hover{
 	border-color:var(--accent);
-	transform:translateY(-2px);
 }
 
-.card:active{
-	transform:scale(.985);
-}
-
-.emoji{
-	font-size:28px;
-	margin-bottom:8px;
+.row{
+	font-size:16px;
+	font-weight:600;
 }
 
 .sw{
-	font-size:16px;
-	font-weight:650;
-	margin-bottom:4px;
-}
-
-.en{
 	font-size:12px;
 	color:var(--muted);
+	margin-top:4px;
 }
 
-/* ---------- MODAL ---------- */
-
+/* MODAL */
 .modal{
 	position:fixed;
 	inset:0;
-	background:rgba(0,0,0,.72);
+	background:rgba(0,0,0,0.7);
 	display:none;
 	align-items:center;
 	justify-content:center;
-	z-index:10;
-	padding:18px;
 }
 
 .box{
-	width:100%;
+	width:90%;
 	max-width:320px;
-	background:#121420;
+	background:var(--card);
 	border:1px solid var(--border);
-	border-radius:18px;
-	padding:16px;
+	border-radius:14px;
+	padding:14px;
 	display:flex;
 	flex-direction:column;
-	align-items:center;
-	text-align:center;
-}
-
-.modal-title{
-	font-size:18px;
-	margin-bottom:4px;
-}
-
-.modal-sub{
-	font-size:11px;
-	color:var(--muted);
-	margin-bottom:14px;
+	gap:8px;
 }
 
 input{
-	width:100%;
-	padding:12px;
-	margin-bottom:10px;
-	border-radius:12px;
+	padding:10px;
+	border-radius:10px;
 	border:1px solid var(--border);
-	background:#0b0d16;
+	background:#0f0f18;
 	color:var(--text);
 	font-size:13px;
-	text-align:center;
-	outline:none;
-}
-
-input:focus{
-	border-color:var(--accent);
 }
 
 button{
-	width:100%;
-	padding:12px;
+	padding:10px;
 	border:none;
-	border-radius:12px;
+	border-radius:10px;
 	background:var(--accent);
 	color:white;
 	font-size:13px;
 	cursor:pointer;
 }
 
-button:hover{
-	opacity:.95;
+.small{
+	font-size:11px;
+	color:var(--muted);
 }
 </style>
 </head>
 
 <body>
 
-<canvas id="stars"></canvas>
-
 <div class="container">
 
-	<div class="logo">SASA</div>
-	<div class="sub">choose a problem</div>
+	<h1>SASA</h1>
+	<div class="sub">chagua tatizo</div>
 
-	<div class="card" onclick="submitFixed('💸','pesa')">
-		<div class="emoji">💸</div>
-		<div class="sw">Pesa</div>
-		<div class="en">money</div>
+	<div class="card" onclick="submitFixed('💸','money')">
+		<div class="row">💸 Pesa</div>
+		<div class="sw">Money / Income</div>
 	</div>
 
-	<div class="card" onclick="submitFixed('⏳','muda')">
-		<div class="emoji">⏳</div>
-		<div class="sw">Muda</div>
-		<div class="en">time</div>
+	<div class="card" onclick="submitFixed('⏳','time')">
+		<div class="row">⏳ Muda</div>
+		<div class="sw">Time / Efficiency</div>
 	</div>
 
-	<div class="card" onclick="submitFixed('📚','elimu')">
-		<div class="emoji">📚</div>
-		<div class="sw">Elimu</div>
-		<div class="en">learning</div>
+	<div class="card" onclick="submitFixed('📚','learning')">
+		<div class="row">📚 Elimu</div>
+		<div class="sw">Learning / Skills</div>
 	</div>
 
 	<div class="card" onclick="openIdea()">
-		<div class="emoji">➕</div>
-		<div class="sw">Wazo</div>
-		<div class="en">new idea</div>
+		<div class="row">➕ Wazo</div>
+		<div class="sw">ongeza tatizo</div>
 	</div>
 
 	<div class="card" onclick="openMap()">
-		<div class="emoji">🗺</div>
-		<div class="sw">Ramani</div>
-		<div class="en">coming soon</div>
+		<div class="row">🗺 Ramani</div>
+		<div class="sw">coming soon</div>
 	</div>
 
 </div>
 
 <!-- IDEA MODAL -->
-
 <div class="modal" id="ideaModal">
 	<div class="box">
-
-		<div class="modal-title">➕ Wazo</div>
-		<div class="modal-sub">emoji + swahili + english</div>
-
-		<input id="emojiInput" placeholder="emoji"/>
-		<input id="swInput" placeholder="swahili"/>
-		<input id="enInput" placeholder="english"/>
-
+		<input id="emoji" placeholder="emoji (mf. 💡)"/>
+		<input id="word" placeholder="wazo (neno moja)"/>
 		<button onclick="submitIdea()">tuma</button>
-
 	</div>
 </div>
 
 <!-- MAP MODAL -->
-
 <div class="modal" id="mapModal">
 	<div class="box">
-
-		<div class="modal-title">🗺 Ramani</div>
-		<div class="modal-sub">
-			regional heatmaps coming soon
-		</div>
-
-		<button onclick="closeMap()">close</button>
-
+		<div class="row">🗺 Ramani</div>
+		<div class="small">ramani ya mahitaji inakuja hivi karibuni</div>
+		<button onclick="closeMap()">funga</button>
 	</div>
 </div>
 
 <script>
 
-/* ---------- REGION ---------- */
-
 let regionCache = null;
 
-async function getRegion(){
+/* ---------------- IP GEO ---------------- */
 
+async function getRegion(){
 	if(regionCache) return regionCache;
 
 	try{
-
 		const res = await fetch("https://ipapi.co/json/");
 		const data = await res.json();
 
 		regionCache = {
-			country:data.country_name,
-			region:data.region,
-			city:data.city
+			country: data.country_name,
+			region: data.region,
+			city: data.city
 		};
 
 		return regionCache;
-
 	}catch(e){
-
-		return {
-			country:"unknown",
-			region:"unknown",
-			city:"unknown"
-		};
+		return {country:"unknown",region:"unknown",city:"unknown"};
 	}
 }
 
-/* ---------- SUBMIT ---------- */
+/* ---------------- SUBMIT FIXED ---------------- */
 
 async function submitFixed(emoji, category){
 
@@ -296,50 +211,38 @@ async function submitFixed(emoji, category){
 	const payload = {
 		emoji,
 		category,
-		location:loc,
-		timestamp:Date.now()
+		location: loc,
+		timestamp: Date.now()
 	};
 
-	console.log(payload);
+	console.log("EVENT:", payload);
 
-	alert(`${emoji} saved`);
+	alert(`Saved: ${emoji} ${category}`);
 }
 
-/* ---------- IDEA ---------- */
+/* ---------------- IDEA ---------------- */
 
 function openIdea(){
 	document.getElementById("ideaModal").style.display="flex";
 }
 
 function submitIdea(){
+	const emoji = document.getElementById("emoji").value.trim();
+	const word = document.getElementById("word").value.trim();
 
-	const emoji =
-		document.getElementById("emojiInput").value.trim();
+	if(!emoji || !word) return;
 
-	const sw =
-		document.getElementById("swInput").value.trim();
-
-	const en =
-		document.getElementById("enInput").value.trim();
-
-	if(!emoji || !sw || !en) return;
-
-	console.log({
+	console.log("CUSTOM IDEA:", {
 		emoji,
-		swahili:sw,
-		english:en
+		word
 	});
 
-	document.getElementById("emojiInput").value="";
-	document.getElementById("swInput").value="";
-	document.getElementById("enInput").value="";
-
+	document.getElementById("emoji").value="";
+	document.getElementById("word").value="";
 	document.getElementById("ideaModal").style.display="none";
-
-	alert("wazo saved");
 }
 
-/* ---------- MAP ---------- */
+/* ---------------- MAP ---------------- */
 
 function openMap(){
 	document.getElementById("mapModal").style.display="flex";
@@ -349,61 +252,12 @@ function closeMap(){
 	document.getElementById("mapModal").style.display="none";
 }
 
-/* ---------- CLOSE MODALS ---------- */
-
+/* close modal click */
 window.onclick = (e)=>{
-
 	if(e.target.classList.contains("modal")){
 		e.target.style.display="none";
 	}
 };
-
-/* ---------- STARFIELD ---------- */
-
-const canvas = document.getElementById("stars");
-const ctx = canvas.getContext("2d");
-
-let stars = [];
-
-function resize(){
-
-	canvas.width = innerWidth;
-	canvas.height = innerHeight;
-
-	stars = Array.from({length:70},()=>({
-		x:Math.random()*canvas.width,
-		y:Math.random()*canvas.height,
-		r:Math.random()*1.4,
-		p:Math.random()*Math.PI*2
-	}));
-}
-
-function animate(){
-
-	ctx.clearRect(0,0,canvas.width,canvas.height);
-
-	for(const s of stars){
-
-		ctx.beginPath();
-
-		ctx.globalAlpha =
-			0.15 + Math.sin(s.p)*0.25;
-
-		ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
-
-		ctx.fillStyle = "white";
-		ctx.fill();
-
-		s.p += 0.01;
-	}
-
-	requestAnimationFrame(animate);
-}
-
-resize();
-animate();
-
-window.addEventListener("resize",resize);
 
 </script>
 

@@ -6,354 +6,192 @@
 <title>SASA</title>
 
 <style>
-:root {
+:root{
 	--bg:#07070c;
 	--card:#141420;
-	--muted:#8a8aa3;
 	--text:#f5f5f7;
-	--accent:#6c7cff;
+	--muted:#8a8aa3;
 	--border:#23233a;
+	--accent:#6c7cff;
 }
 
-body {
+*{
+	box-sizing:border-box;
+}
+
+body{
 	margin:0;
-	font-family:system-ui;
+	font-family:system-ui,-apple-system,sans-serif;
 	background:var(--bg);
 	color:var(--text);
 	display:flex;
 	justify-content:center;
-	overflow-x:hidden;
 }
 
-#stars {
-	position:fixed;
-	inset:0;
-	z-index:0;
-}
-
-.container {
-	position:relative;
-	z-index:1;
+.container{
 	width:100%;
 	max-width:520px;
-	padding:18px;
+	padding:22px;
 	min-height:100vh;
-	box-sizing:border-box;
+	display:flex;
+	flex-direction:column;
+	justify-content:center;
+	gap:18px;
 }
 
-header {
+.header{
 	text-align:center;
-	margin:18px 0;
+	margin-bottom:10px;
 }
 
-h1 { margin:0; font-size:20px; }
+h1{
+	margin:0;
+	font-size:22px;
+	letter-spacing:1px;
+}
 
-.sub {
-	font-size:12px;
+.sub{
 	color:var(--muted);
+	font-size:12px;
 	margin-top:6px;
 }
 
-textarea {
-	width:100%;
-	height:70px;
-	border-radius:12px;
-	border:1px solid var(--border);
-	padding:10px;
-	background:rgba(20,20,32,0.7);
+.question{
+	text-align:center;
+	font-size:15px;
 	color:var(--text);
-	font-size:13px;
-	box-sizing:border-box;
+	margin:10px 0;
+	opacity:0.95;
 }
 
-button {
-	width:100%;
-	margin-top:10px;
-	padding:11px;
-	border:none;
-	border-radius:12px;
-	background:var(--accent);
-	color:#fff;
-	font-size:13px;
+.grid{
+	display:grid;
+	grid-template-columns:1fr;
+	gap:12px;
 }
 
-.section-title {
-	font-size:11px;
-	color:var(--muted);
-	margin:14px 0 8px;
-	letter-spacing:1px;
-	text-transform:uppercase;
-}
-
-/* ---------------- CARD ---------------- */
-
-.card {
+.card{
 	background:rgba(20,20,32,0.85);
 	border:1px solid var(--border);
-	border-radius:12px;
-	padding:10px;
-	margin-bottom:10px;
-
-	animation:fadeIn 0.18s ease-out;
-	transition:transform 0.15s ease;
-}
-
-.card:hover {
-	transform:translateY(-2px);
-}
-
-@keyframes fadeIn {
-	from { opacity:0; transform:translateY(6px); }
-	to { opacity:1; transform:translateY(0); }
-}
-
-.text {
-	font-size:13px;
-	line-height:1.4;
-}
-
-.meta {
-	margin-top:8px;
-	display:flex;
-	justify-content:space-between;
-	font-size:11px;
-	color:var(--muted);
-}
-
-.actions {
-	margin-top:8px;
-	display:flex;
-	gap:8px;
-}
-
-.small-btn {
-	flex:1;
-	font-size:11px;
-	padding:8px;
-	border-radius:10px;
-	border:1px solid var(--border);
-	background:transparent;
-	color:var(--muted);
-}
-
-/* ---------------- MODAL ---------------- */
-
-.modal {
-	position:fixed;
-	inset:0;
-	background:rgba(0,0,0,0.65);
-	display:none;
-	align-items:center;
-	justify-content:center;
-	z-index:10;
-}
-
-.modal-box {
-	width:90%;
-	max-width:320px;
-	background:var(--card);
-	border:1px solid var(--border);
-	border-radius:14px;
 	padding:14px;
+	border-radius:14px;
+	cursor:pointer;
+	transition:transform .12s ease, border .12s ease;
 }
 
-.modal input {
-	width:100%;
-	padding:10px;
-	border-radius:10px;
-	border:1px solid var(--border);
-	background:#0f0f18;
-	color:var(--text);
-	font-size:13px;
-	box-sizing:border-box;
-	margin-bottom:8px;
+.card:active{
+	transform:scale(0.98);
+}
+
+.card:hover{
+	border-color:rgba(108,124,255,0.6);
+}
+
+.icon{
+	font-size:20px;
+	margin-bottom:6px;
+}
+
+.title{
+	font-size:15px;
+	font-weight:600;
+}
+
+.desc{
+	font-size:12px;
+	color:var(--muted);
+	margin-top:4px;
+	line-height:1.3;
+}
+
+.footer{
+	text-align:center;
+	font-size:11px;
+	color:var(--muted);
+	margin-top:10px;
+}
+
+/* subtle fade-in */
+.fade{
+	animation:fade .25s ease-out;
+}
+
+@keyframes fade{
+	from{opacity:0; transform:translateY(8px);}
+	to{opacity:1; transform:translateY(0);}
+}
+
+@media(min-width:480px){
+	.grid{
+		grid-template-columns:1fr;
+	}
 }
 </style>
 </head>
 
 <body>
-<canvas id="stars"></canvas>
 
-<div class="container">
+<div class="container fade">
 
-<header>
-	<h1>SASA</h1>
-	<div class="sub">Problems Are Opportunities!</div>
-</header>
-
-<textarea id="input" placeholder="What should be built?"></textarea>
-<button onclick="attemptSubmit()">Submit</button>
-
-<div class="section-title">Requests</div>
-<div id="feed"></div>
-
-</div>
-
-<!-- MODAL -->
-<div class="modal" id="modal">
-	<div class="modal-box">
-		<input id="username" placeholder="username" />
-		<input id="email" placeholder="email" />
-		<button onclick="confirmSubmit()">Continue</button>
+	<div class="header">
+		<h1>SASA</h1>
+		<div class="sub">Turn everyday problems into tools</div>
 	</div>
+
+	<div class="question">
+		What area of life causes you the most stress?
+	</div>
+
+	<div class="grid">
+
+		<div class="card" onclick="select('money')">
+			<div class="icon">💸</div>
+			<div class="title">Money</div>
+			<div class="desc">
+				Finding income, paying bills, saving, or running a small business
+			</div>
+		</div>
+
+		<div class="card" onclick="select('time')">
+			<div class="icon">⏳</div>
+			<div class="title">Time & Daily Struggle</div>
+			<div class="desc">
+				Delays, repetitive tasks, inefficiency, communication problems
+			</div>
+		</div>
+
+		<div class="card" onclick="select('opportunity')">
+			<div class="icon">🚀</div>
+			<div class="title">Learning & Opportunity</div>
+			<div class="desc">
+				Skills, jobs, education, online work, growth paths
+			</div>
+		</div>
+
+	</div>
+
+	<div class="footer">
+		Tap a category to continue
+	</div>
+
 </div>
 
 <script>
+function select(type){
 
-/* ---------------- STORAGE ---------------- */
+	const endpoints = {
+		money: "https://forms.gle/REPLACE_ME",
+		time: "https://forms.gle/REPLACE_ME",
+		opportunity: "https://forms.gle/REPLACE_ME"
+	};
 
-function getStore(){
-	return JSON.parse(localStorage.getItem("sasa")||"[]");
+	// lightweight tracking hook (optional)
+	console.log("selected:", type);
+
+	// redirect to form
+	window.location.href = endpoints[type];
 }
-
-function setStore(v){
-	localStorage.setItem("sasa",JSON.stringify(v));
-}
-
-/* ---------------- FLOW ---------------- */
-
-let pendingText="";
-
-function attemptSubmit(){
-	const t=document.getElementById("input").value.trim();
-	if(!t) return;
-	pendingText=t;
-	document.getElementById("modal").style.display="flex";
-}
-
-function confirmSubmit(){
-	const u=document.getElementById("username").value.trim();
-	const e=document.getElementById("email").value.toLowerCase().trim();
-	if(!u || !e.includes("@")) return;
-
-	const data=getStore();
-
-	if(data.some(x=>x.email===e)){
-		alert("Email already used.");
-		return;
-	}
-
-	data.push({
-		text:pendingText,
-		username:u,
-		email:e,
-		upvotes:0,
-		time:Date.now()
-	});
-
-	setStore(data);
-
-	pendingText="";
-	document.getElementById("input").value="";
-	document.getElementById("modal").style.display="none";
-
-	render();
-}
-
-/* ---------------- UPVOTE ---------------- */
-
-function upvote(i){
-	const d=getStore();
-	const k="v_"+i;
-	if(localStorage.getItem(k)) return;
-
-	d[i].upvotes=(d[i].upvotes||0)+1;
-	setStore(d);
-	localStorage.setItem(k,"1");
-	render();
-}
-
-/* ---------------- X SHARE ---------------- */
-
-function xShare(text){
-	const msg =
-`${text}
-
-Build this on SASA
-@unprincipledinc`;
-
-	const url="https://twitter.com/intent/tweet?text="+encodeURIComponent(msg);
-	window.open(url,"_blank");
-}
-
-/* ---------------- RENDER ---------------- */
-
-function render(){
-	const feed=document.getElementById("feed");
-	const data=getStore();
-
-	feed.innerHTML="";
-
-	if(!data.length){
-		feed.innerHTML="<div style='color:#8a8aa3;font-size:12px'>No requests yet</div>";
-		return;
-	}
-
-	[...data].reverse().forEach((item,i)=>{
-		const real=data.length-1-i;
-
-		const el=document.createElement("div");
-		el.className="card";
-
-		el.innerHTML=`
-			<div class="text">${item.text}</div>
-
-			<div class="meta">
-				<span>▲ ${item.upvotes||0}</span>
-				<span>by ${item.username}</span>
-			</div>
-
-			<div class="actions">
-				<button class="small-btn" onclick="upvote(${real})">Upvote</button>
-				<button class="small-btn" onclick="xShare(\`${item.text.replace(/`/g,'')}\`)">Share X</button>
-			</div>
-		`;
-
-		feed.appendChild(el);
-	});
-}
-
-render();
-
-/* ---------------- STARFIELD (twinkle version) ---------------- */
-
-const c=document.getElementById("stars");
-const ctx=c.getContext("2d");
-
-let stars=[];
-
-function resize(){
-	c.width=innerWidth;
-	c.height=innerHeight;
-
-	stars=Array.from({length:80},()=>({
-		x:Math.random()*c.width,
-		y:Math.random()*c.height,
-		r:Math.random()*1.3,
-		p:Math.random()*Math.PI*2
-	}));
-}
-
-function draw(){
-	ctx.clearRect(0,0,c.width,c.height);
-
-	for(let s of stars){
-		ctx.globalAlpha=0.2+Math.sin(s.p)*0.2;
-		ctx.beginPath();
-		ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
-		ctx.fillStyle="white";
-		ctx.fill();
-
-		s.p+=0.01;
-	}
-
-	requestAnimationFrame(draw);
-}
-
-resize();
-draw();
-window.addEventListener("resize",resize);
-
 </script>
+
 </body>
 </html>

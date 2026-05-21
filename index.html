@@ -48,14 +48,17 @@ h1{
 	margin-bottom:10px;
 }
 
+/* CARD */
+
 .card{
 	width:100%;
 	background:rgba(20,20,32,0.85);
 	border:1px solid var(--border);
 	border-radius:14px;
-	padding:16px;
+	padding:14px;
 	cursor:pointer;
 	transition:transform .1s ease, border .15s ease;
+	text-align:left;
 }
 
 .card:active{
@@ -66,18 +69,25 @@ h1{
 	border-color:var(--accent);
 }
 
-.row{
+.top{
 	font-size:16px;
-	font-weight:600;
+	font-weight:700;
 }
 
-.sw{
-	font-size:12px;
+.mid{
+	font-size:13px;
 	color:var(--muted);
+	margin-top:2px;
+}
+
+.bottom{
+	font-size:11px;
+	color:#6f6f86;
 	margin-top:4px;
 }
 
 /* MODAL */
+
 .modal{
 	position:fixed;
 	inset:0;
@@ -132,29 +142,34 @@ button{
 	<h1>SASA</h1>
 	<div class="sub">chagua tatizo</div>
 
-	<div class="card" onclick="submitFixed('💸','money')">
-		<div class="row">💸 Pesa</div>
-		<div class="sw">Money / Income</div>
+	<div class="card" onclick="submitFixed('💸','pesa')">
+		<div class="top">💸 Pesa</div>
+		<div class="mid">Money / Income</div>
+		<div class="bottom">financial pressure or opportunity</div>
 	</div>
 
-	<div class="card" onclick="submitFixed('⏳','time')">
-		<div class="row">⏳ Muda</div>
-		<div class="sw">Time / Efficiency</div>
+	<div class="card" onclick="submitFixed('⏳','muda')">
+		<div class="top">⏳ Muda</div>
+		<div class="mid">Time / Efficiency</div>
+		<div class="bottom">lack of time or productivity friction</div>
 	</div>
 
-	<div class="card" onclick="submitFixed('📚','learning')">
-		<div class="row">📚 Elimu</div>
-		<div class="sw">Learning / Skills</div>
+	<div class="card" onclick="submitFixed('📚','elimu')">
+		<div class="top">📚 Elimu</div>
+		<div class="mid">Learning / Skills</div>
+		<div class="bottom">education, skills, knowledge gaps</div>
 	</div>
 
 	<div class="card" onclick="openIdea()">
-		<div class="row">➕ Wazo</div>
-		<div class="sw">ongeza tatizo</div>
+		<div class="top">➕ Wazo</div>
+		<div class="mid">Add new category</div>
+		<div class="bottom">define a new type of problem</div>
 	</div>
 
 	<div class="card" onclick="openMap()">
-		<div class="row">🗺 Ramani</div>
-		<div class="sw">coming soon</div>
+		<div class="top">🗺 Ramani</div>
+		<div class="mid">Heatmap (coming soon)</div>
+		<div class="bottom">see regional demand signals</div>
 	</div>
 
 </div>
@@ -162,8 +177,9 @@ button{
 <!-- IDEA MODAL -->
 <div class="modal" id="ideaModal">
 	<div class="box">
-		<input id="emoji" placeholder="emoji (mf. 💡)"/>
-		<input id="word" placeholder="wazo (neno moja)"/>
+		<input id="emoji" placeholder="emoji (e.g. 💡)"/>
+		<input id="swahili" placeholder="swahili word (e.g. shida)"/>
+		<input id="english" placeholder="english context (e.g. problem type)"/>
 		<button onclick="submitIdea()">tuma</button>
 	</div>
 </div>
@@ -171,9 +187,9 @@ button{
 <!-- MAP MODAL -->
 <div class="modal" id="mapModal">
 	<div class="box">
-		<div class="row">🗺 Ramani</div>
-		<div class="small">ramani ya mahitaji inakuja hivi karibuni</div>
-		<button onclick="closeMap()">funga</button>
+		<div class="top">🗺 Ramani</div>
+		<div class="small">heatmap system in development</div>
+		<button onclick="closeMap()">close</button>
 	</div>
 </div>
 
@@ -202,7 +218,7 @@ async function getRegion(){
 	}
 }
 
-/* ---------------- SUBMIT FIXED ---------------- */
+/* ---------------- SUBMIT ---------------- */
 
 async function submitFixed(emoji, category){
 
@@ -217,7 +233,7 @@ async function submitFixed(emoji, category){
 
 	console.log("EVENT:", payload);
 
-	alert(`Saved: ${emoji} ${category}`);
+	alert(`${emoji} ${category} saved`);
 }
 
 /* ---------------- IDEA ---------------- */
@@ -228,17 +244,20 @@ function openIdea(){
 
 function submitIdea(){
 	const emoji = document.getElementById("emoji").value.trim();
-	const word = document.getElementById("word").value.trim();
+	const swahili = document.getElementById("swahili").value.trim();
+	const english = document.getElementById("english").value.trim();
 
-	if(!emoji || !word) return;
+	if(!emoji || !swahili) return;
 
-	console.log("CUSTOM IDEA:", {
+	console.log("CUSTOM CATEGORY:", {
 		emoji,
-		word
+		swahili,
+		english
 	});
 
 	document.getElementById("emoji").value="";
-	document.getElementById("word").value="";
+	document.getElementById("swahili").value="";
+	document.getElementById("english").value="";
 	document.getElementById("ideaModal").style.display="none";
 }
 
@@ -252,7 +271,7 @@ function closeMap(){
 	document.getElementById("mapModal").style.display="none";
 }
 
-/* close modal click */
+/* close modal */
 window.onclick = (e)=>{
 	if(e.target.classList.contains("modal")){
 		e.target.style.display="none";
